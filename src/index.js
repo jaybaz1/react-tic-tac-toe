@@ -23,6 +23,7 @@ class Board extends React.Component {
   // Fn that returns the Square React element with define props
   renderSquare(i) {
     return (
+      // Pass square number to each Sqaure element
       <Square
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
@@ -77,7 +78,11 @@ class Game extends React.Component {
   handleClick(i) {
     // Takes a copy of the squares so not to mutate the original array
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
+
+    // Get the current squares array
     const current = history[history.length - 1];
+
+    // Copy the current squares array
     const squares = current.squares.slice();
 
     // If a winner is true return immediately
@@ -85,10 +90,12 @@ class Game extends React.Component {
       return;
     }
 
+    // Add player symbol to board
     squares[i] = this.state.xIsNext ? "X" : "O";
 
-    // Updates the components state
+    // Updates the component state
     this.setState({
+      // Add new Squares array with updated values to history array
       history: history.concat([
         {
           squares: squares
@@ -97,9 +104,12 @@ class Game extends React.Component {
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext
     });
+
+    // Rerender component because state has been updated
   }
 
   jumpTo(step) {
+    // Updates state and rerenders the component
     this.setState({
       stepNumber: step,
       xIsNext: step % 2 === 0
@@ -107,12 +117,21 @@ class Game extends React.Component {
   }
 
   render() {
+    // Copy of history from state
     const history = this.state.history;
+
+    // Get current squares array
     const current = history[this.state.stepNumber];
+
+    // Check if player has won by passing in current squares array to compare
     const winner = calculateWinner(current.squares);
 
+    // Add moves to UI
     const moves = history.map((step, move) => {
+      // move = index;
       const desc = move ? "Go to move #" + move : "Go to game start";
+
+      // On click fire jumpTo Fn
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
